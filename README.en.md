@@ -8,3 +8,7 @@
   BeanPostProcessor机制
   Aop机制
   getter，setter注释封装
+  
+>相关说明
+> @Retention(RetentionPolicy.RUNTIME) 注释 规定注释存在的生命周期
+> @Target 说明了Annotation所修饰的对象范围
