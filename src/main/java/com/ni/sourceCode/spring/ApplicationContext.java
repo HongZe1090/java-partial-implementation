@@ -44,7 +44,8 @@ public class ApplicationContext {
                 Class<?> aClass = classLoader.loadClass(className);
                 if(aClass.isAnnotationPresent(Component.class)) {
 //                    判断是否有component注解
-
+//                    判断当前bean是单例bean还是原型（pro）bean
+//                      BeanDefinition
                 }
             }
         }

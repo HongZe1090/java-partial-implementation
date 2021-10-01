@@ -15,7 +15,10 @@
 - 根据注解获取需要扫描的文件
 - 根据有spring注解的类，扫描文件下各个类
   - 有注解，表明这是一个类
-- 
+-
+
+##### 2 getBean()流程
+
 >相关说明
 > @Retention(RetentionPolicy.RUNTIME) 注释 规定注释存在的生命周期
 > @Target 说明了Annotation所修饰的对象范围
