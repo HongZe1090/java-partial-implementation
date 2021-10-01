@@ -1,4 +1,4 @@
-package com.ni.sourceCode.Util.service;
+package com.ni.sourceCode.example.service;
 
 import com.ni.sourceCode.spring.Component;
 
