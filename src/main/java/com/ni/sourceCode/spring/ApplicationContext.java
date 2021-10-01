@@ -2,11 +2,15 @@ package com.ni.sourceCode.spring;
 
 import java.io.File;
 import java.net.URL;
+import java.util.concurrent.ConcurrentHashMap;
 
 //spring的容器类
 public class ApplicationContext {
 //    配置类
     private Class configClass;
+
+    //单例池
+    private ConcurrentHashMap<String,Object> singletonObbjects = new ConcurrentHashMap<>();
 
     public ApplicationContext(Class configClass) throws ClassNotFoundException {
 
@@ -36,7 +40,12 @@ public class ApplicationContext {
                 className = className.replace("\\",".");
                 System.out.println(className);
 
+//                加载这个类
                 Class<?> aClass = classLoader.loadClass(className);
+                if(aClass.isAnnotationPresent(Component.class)) {
+//                    判断是否有component注解
+
+                }
             }
         }
 
