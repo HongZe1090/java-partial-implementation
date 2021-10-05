@@ -1,5 +1,6 @@
 package com.ni.sourceCode.example.service;
 
+import com.ni.sourceCode.spring.Autowired;
 import com.ni.sourceCode.spring.Component;
 import com.ni.sourceCode.spring.Scope;
 
@@ -8,5 +9,9 @@ import com.ni.sourceCode.spring.Scope;
 @Component("userService")
 @Scope("prototype")
 public class UserService {
+
+    @Autowired
+    OrderService orderService;
+
 
 }

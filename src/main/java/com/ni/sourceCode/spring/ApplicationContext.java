@@ -85,7 +85,6 @@ public class ApplicationContext {
 
                     // beanDefinitionMap 中储存该包下所有beanName的属性（由注释标注）
                     beanDefinitionMap.put(beanName,beanDefinition);
-
                 }
             }
         }
