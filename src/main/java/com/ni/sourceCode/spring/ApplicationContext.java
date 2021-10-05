@@ -1,7 +1,9 @@
 package com.ni.sourceCode.spring;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 //spring的容器类
@@ -9,15 +11,36 @@ public class ApplicationContext {
 //    配置类
     private Class configClass;
 
-    //单例池
+    //单例池 这里的Object是已经实例化后的Object
     private ConcurrentHashMap<String,Object> singletonObjects = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String,BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
-    public ApplicationContext(Class configClass) throws ClassNotFoundException {
+    public ApplicationContext(Class configClass) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         this.configClass = configClass;
-//        解析配置类 .value为获取其的component值
-//        ComponentScan注解-->扫描路径-->扫描路径包下所有有spring注释中的类，对其进行解析
+        //        解析配置类 .value为获取其的component值
+        //        ComponentScan注解-->扫描路径-->获取路径并使用io类加载该包下的文件路径
+        Scan(configClass);
+
+//        在容器启动时即为所有的单例类创建Bean（实例）遍历Map获取每个entry[映射]
+        for (Map.Entry<String,BeanDefinition> entry : beanDefinitionMap.entrySet()) {
+            String beanName = entry.getKey();
+            if (entry.getValue().getScope().equals("singleton")) {
+                Object bean = creatBean(entry.getValue());
+                singletonObjects.put(beanName,bean);
+            }
+        }
+    }
+
+    public Object creatBean(BeanDefinition beanDefinition) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        Class clazz = beanDefinition.getClazz();
+        Object instance = clazz.getDeclaredConstructor().newInstance();
+
+        return instance;
+    }
+
+    private void Scan(Class configClass) throws ClassNotFoundException {
 //        获取传入类的componentScan注解
         ComponentScan componentScanAnnotation = (ComponentScan) configClass.getDeclaredAnnotation(ComponentScan.class);
         String path = componentScanAnnotation.value();
@@ -51,6 +74,7 @@ public class ApplicationContext {
                     String beanName = component.value();
 
                     BeanDefinition beanDefinition = new BeanDefinition();
+                    beanDefinition.setClazz(aClass);
 
                     if(aClass.isAnnotationPresent(Scope.class)) {
                         Scope scope = aClass.getDeclaredAnnotation(Scope.class);
@@ -67,10 +91,20 @@ public class ApplicationContext {
         }
     }
 
-    public Object getBean(String beanName) {
+    public Object getBean(String beanName) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (beanDefinitionMap.containsKey(beanName)) {
-
+        BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
+            if(beanDefinition.getScope().equals("singleton")) {
+                Object o = singletonObjects.get(beanName);
+                return o;
+            } else {
+//            创建Bean对象
+                Object bean = creatBean(beanDefinition);
+                return bean;
+            }
+        } else {
+//            不存在这个bean
+            throw new NullPointerException();
         }
-        return null;
     }
 }
