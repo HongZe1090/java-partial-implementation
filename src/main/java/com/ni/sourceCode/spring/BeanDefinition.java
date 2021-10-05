@@ -6,6 +6,9 @@ public class BeanDefinition {
 //    加载模式
     private String scope;
 
+    public BeanDefinition() {
+    }
+
     public BeanDefinition(Class clazz, String scope) {
         this.clazz = clazz;
         this.scope = scope;

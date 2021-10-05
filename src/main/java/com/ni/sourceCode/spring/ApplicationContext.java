@@ -10,12 +10,13 @@ public class ApplicationContext {
     private Class configClass;
 
     //单例池
-    private ConcurrentHashMap<String,Object> singletonObbjects = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String,Object> singletonObjects = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String,BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
     public ApplicationContext(Class configClass) throws ClassNotFoundException {
 
         this.configClass = configClass;
-//        解析配置类
+//        解析配置类 .value为获取其的component值
 //        ComponentScan注解-->扫描路径-->扫描路径包下所有有spring注释中的类，对其进行解析
 //        获取传入类的componentScan注解
         ComponentScan componentScanAnnotation = (ComponentScan) configClass.getDeclaredAnnotation(ComponentScan.class);
@@ -46,14 +47,30 @@ public class ApplicationContext {
 //                    判断是否有component注解
 //                    判断当前bean是单例bean还是原型（pro）bean
 //                      BeanDefinition
+                    Component component = aClass.getDeclaredAnnotation(Component.class);
+                    String beanName = component.value();
+
+                    BeanDefinition beanDefinition = new BeanDefinition();
+
+                    if(aClass.isAnnotationPresent(Scope.class)) {
+                        Scope scope = aClass.getDeclaredAnnotation(Scope.class);
+                        beanDefinition.setScope(scope.value());
+                    } else {
+                        beanDefinition.setScope("singlet");
+                    }
+
+                    // beanDefinitionMap 中储存该包下所有beanName的属性（由注释标注）
+                    beanDefinitionMap.put(beanName,beanDefinition);
+
                 }
             }
         }
-
     }
 
     public Object getBean(String beanName) {
+        if (beanDefinitionMap.containsKey(beanName)) {
 
+        }
         return null;
     }
 }
