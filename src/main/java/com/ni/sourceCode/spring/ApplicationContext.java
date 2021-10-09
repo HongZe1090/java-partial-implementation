@@ -1,6 +1,7 @@
 package com.ni.sourceCode.spring;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class ApplicationContext {
     private ConcurrentHashMap<String,Object> singletonObjects = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String,BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
-    public ApplicationContext(Class configClass) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public ApplicationContext(Class configClass) throws Exception {
 
         this.configClass = configClass;
         //        解析配置类 .value为获取其的component值
@@ -26,16 +27,38 @@ public class ApplicationContext {
         for (Map.Entry<String,BeanDefinition> entry : beanDefinitionMap.entrySet()) {
             String beanName = entry.getKey();
             if (entry.getValue().getScope().equals("singleton")) {
-                Object bean = creatBean(entry.getValue());
+                Object bean = creatBean( beanName , entry.getValue());
                 singletonObjects.put(beanName,bean);
             }
         }
     }
 
-    public Object creatBean(BeanDefinition beanDefinition) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Object creatBean(String beanName , BeanDefinition beanDefinition) throws Exception {
 
         Class clazz = beanDefinition.getClazz();
+//        通过反射进入bean 实例化一个对象 这个对象是干嘛的？
         Object instance = clazz.getDeclaredConstructor().newInstance();
+
+//        反射，获取类的所有属性
+        for (Field declaredFiled : clazz.getDeclaredFields()) {
+//            判断此字段是否有Autowired注释
+        if (declaredFiled.isAnnotationPresent(Autowired.class)) {
+//                前提：在getBean中有即在容器中即在beanDefinitionMap已经注册
+                Object bean = getBean(declaredFiled.getName());
+                declaredFiled.setAccessible(true);
+                declaredFiled.set(instance,bean);
+             }
+        }
+
+//        如果这个方法是bean接口的实例化
+        if ( instance instanceof BeanNameAware) {
+//            BeanNameAware实例化
+            ((BeanNameAware)instance).setBeanName(beanName);
+        }
+
+        if ( instance instanceof InitializingBean) {
+            ((InitializingBean)instance).afterPropertiesSet();
+        }
 
         return instance;
     }
@@ -90,7 +113,7 @@ public class ApplicationContext {
         }
     }
 
-    public Object getBean(String beanName) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public Object getBean(String beanName) throws Exception {
         if (beanDefinitionMap.containsKey(beanName)) {
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
             if(beanDefinition.getScope().equals("singleton")) {
@@ -98,7 +121,7 @@ public class ApplicationContext {
                 return o;
             } else {
 //            创建Bean对象
-                Object bean = creatBean(beanDefinition);
+                Object bean = creatBean(beanName,beanDefinition);
                 return bean;
             }
         } else {

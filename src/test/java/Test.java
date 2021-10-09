@@ -4,7 +4,7 @@ import com.ni.sourceCode.spring.ApplicationContext;
 import java.lang.reflect.InvocationTargetException;
 
 public class Test {
-    public static void main(String[] args) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws Exception {
         ApplicationContext applicationContext = new ApplicationContext(AppConfig.class);
 
         System.out.println(applicationContext.getBean("userService"));
