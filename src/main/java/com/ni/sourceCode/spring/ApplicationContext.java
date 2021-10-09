@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,6 +17,7 @@ public class ApplicationContext {
     //单例池 这里的Object是已经实例化后的Object
     private ConcurrentHashMap<String,Object> singletonObjects = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String,BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
+    private List<BeanPostProcessor> BeanPostProcessorList = new ArrayList<>();
 
     public ApplicationContext(Class configClass) throws Exception {
 
@@ -46,6 +49,7 @@ public class ApplicationContext {
 //                前提：在getBean中有即在容器中即在beanDefinitionMap已经注册
                 Object bean = getBean(declaredFiled.getName());
                 declaredFiled.setAccessible(true);
+
                 declaredFiled.set(instance,bean);
              }
         }
@@ -56,14 +60,20 @@ public class ApplicationContext {
             ((BeanNameAware)instance).setBeanName(beanName);
         }
 
+        //bean的初始化对应接口，可以执行一些操作
         if ( instance instanceof InitializingBean) {
             ((InitializingBean)instance).afterPropertiesSet();
+        }
+
+//        自定义的BeanPostProcessor执行
+        for (BeanPostProcessor beanPostProcessor : BeanPostProcessorList) {
+            instance = beanPostProcessor.postProcessBeforeInitialization(instance,beanName);
         }
 
         return instance;
     }
 
-    private void Scan(Class configClass) throws ClassNotFoundException {
+    private void Scan(Class configClass) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 //        获取传入类的componentScan注解
         ComponentScan componentScanAnnotation = (ComponentScan) configClass.getDeclaredAnnotation(ComponentScan.class);
         String path = componentScanAnnotation.value();
@@ -90,6 +100,13 @@ public class ApplicationContext {
 //                加载这个类
                 Class<?> aClass = classLoader.loadClass(className);
                 if(aClass.isAnnotationPresent(Component.class)) {
+
+//                    反射的isAssignableFrom方法判断其是否是某个类的子类
+                    if (BeanPostProcessor.class.isAssignableFrom(aClass)) {
+                        BeanPostProcessor instance = (BeanPostProcessor) aClass.getDeclaredConstructor().newInstance();
+                        BeanPostProcessorList.add(instance);
+                    }
+
 //                    判断是否有component注解
 //                    判断当前bean是单例bean还是原型（pro）bean
 //                      BeanDefinition
