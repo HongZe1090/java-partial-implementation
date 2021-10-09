@@ -10,7 +10,7 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         System.out.println("这里是每次初始化前");
-        if(beanName.equals("userService")) {
+        if(beanName.equals("UserService")) {
             ((UserService)bean).setName("这里是postProcessBeforeInitialization方法的使用，程序猿自定义BeanPostProcesso, userServicer实现接口");
         }
 
