@@ -70,6 +70,11 @@ public class ApplicationContext {
             instance = beanPostProcessor.postProcessBeforeInitialization(instance,beanName);
         }
 
+        //自定义的BeanPostProcessor执行
+        for (BeanPostProcessor beanPostProcessor : BeanPostProcessorList) {
+            instance = beanPostProcessor.postProcessAfterInitialization(instance,beanName);
+        }
+
         return instance;
     }
 

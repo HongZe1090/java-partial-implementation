@@ -32,7 +32,7 @@
 2. InitializingBean初始化，在bean初始话时对bean进行一些操作
 3. BeanPostProcessor接口（bean的后置处理器），在bean初始化前和初始化后对bean进行一些操作
 - 程序猿自定义，实现BeanPostProcessor接口
-- 扫描时判断，如果是BeanPostProcessor接口实现就加入List
+- 扫描时判断，如果是BeanPostProcessor接口的实现就加入List
 - 最后在creatBean时执行List中的全部BeanPostProcessor
 
 >相关说明
@@ -43,7 +43,7 @@
 
 ###### 一些心得体会：
 1.注释相当于为类添加了一些属性和属性值，便于操作；同时也有2的考虑
-2.接口或注释都可以为类提供一些标识，在spring对类自动操作时可以通过这些标识执行特定的操作
+2.接口或注释都可以为类提供一些标识，在spring对类自动操作时可以通过这些标识执行特定的操作(如InitializingBean，BeanPostProcessor等)
 3.基本都在scan时把特殊需求的类加入list，在creatBean时针对特对的类操作
 
 ###### 疑问：
