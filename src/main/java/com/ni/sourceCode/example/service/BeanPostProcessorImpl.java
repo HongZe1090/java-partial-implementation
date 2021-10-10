@@ -26,7 +26,7 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
         System.out.println("这里是每次初始化后");
         if (beanName.equals("userService")) {
 
-            Object proxyInstance = Proxy.newProxyInstance(BeanPostProcessor.class.getClassLoader(), bean.getClass().getInterfaces(), new InvocationHandler() {
+            Object proxyInstance = Proxy.newProxyInstance(UserService.class.getClassLoader(), bean.getClass().getInterfaces(), new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                     System.out.println("代理逻辑");

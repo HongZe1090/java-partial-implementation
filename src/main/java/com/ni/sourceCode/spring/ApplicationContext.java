@@ -66,9 +66,9 @@ public class ApplicationContext {
         }
 
 //        自定义的BeanPostProcessor执行
-        for (BeanPostProcessor beanPostProcessor : BeanPostProcessorList) {
-            instance = beanPostProcessor.postProcessBeforeInitialization(instance,beanName);
-        }
+//        for (BeanPostProcessor beanPostProcessor : BeanPostProcessorList) {
+//            instance = beanPostProcessor.postProcessBeforeInitialization(instance,beanName);
+//        }
 
         //自定义的BeanPostProcessor执行
         for (BeanPostProcessor beanPostProcessor : BeanPostProcessorList) {
