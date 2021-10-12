@@ -1,4 +1,4 @@
-# Spring部分实现
+# 一 Spring部分实现
 
 #### 实现内容包括
 - spring启动及扫描流程 
@@ -26,7 +26,7 @@
 - 如果有则判断其的scope
 - 若为单例模式，从singletonMap中取用（在加载springContext时加载）
 
-##### spring相关接口实现
+##### 3. spring相关接口实现
 1. BeanNameAware回调，bean获取自己在bean工厂中的beanName。让其意识到自己在bean中的存在以调用其他bean，在bean单例第一次扫描或者多例获取时时创建
 2. InitializingBean初始化，在bean初始话时对bean进行一些操作
 3. BeanPostProcessor接口（bean的后置处理器），在bean初始化前和初始化后对bean进行一些操作
@@ -39,16 +39,22 @@
 > 注释 自我感觉就是为类添加了一个属性，注释名就是属性名，注释值就是属性值
 > @Retention(RetentionPolicy.RUNTIME) 注释 规定注释存在的生命周期
 > @Target 说明了Annotation所修饰的对象范围
->
 
 ###### 一些心得体会：
 1.注释相当于为类添加了一些属性和属性值，便于操作；同时也有2的考虑
 2.接口或注释都可以为类提供一些标识，在spring对类自动操作时可以通过这些标识执行特定的操作(如InitializingBean，BeanPostProcessor等)
 3.基本都在scan时把特殊需求的类加入list，在creatBean时针对特对的类操作
-4.
 
 ###### 疑问：
 1.entrySet映射怎么用
 2.https://blog.csdn.net/weixin_42181686/article/details/115074669 反射有什么好处
 3.反射创建实例与bean初始化之间的关系
 4.向上转型，向下转型，动态代理的方法
+
+# 二 Spring相关知识点集中
+##### 1 spring生命周期
+1. 创建
+  class（UserService.class）--> 配置类--> 实例化--> 对象--> 属性填充（依赖注入）--> 初始化（afterPropertiesSet）--> AOP--> 代理对象--> Bean对象
+  - 加载和初始化是俩码事，在scan方法时使用classLoad加载获取注释，在scan后或creat时初始化，此时可以使用Initialization接口做一些设置（类比vue的声明周期）
+  - AOP
+2. 销毁
