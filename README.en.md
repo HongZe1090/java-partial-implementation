@@ -58,3 +58,8 @@
   - 加载和初始化是俩码事，在scan方法时使用classLoad加载获取注释，在scan后或creat时初始化，此时可以使用Initialization接口做一些设置（类比vue的声明周期）
   - AOP
 2. 销毁
+
+# 三 Dubbo部分实现
+
+
+#### 

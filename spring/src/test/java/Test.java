@@ -1,6 +1,5 @@
 import com.ni.sourceCode.example.AppConfig;
 import com.ni.sourceCode.example.service.UserInterface;
-import com.ni.sourceCode.example.service.UserService;
 import com.ni.sourceCode.spring.ApplicationContext;
 
 public class Test {
