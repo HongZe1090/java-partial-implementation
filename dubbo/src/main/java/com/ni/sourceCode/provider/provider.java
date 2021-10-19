@@ -1,6 +1,7 @@
 package com.ni.sourceCode.provider;
 
 import com.ni.sourceCode.framwork.protocal.Http.HttpServer;
+import com.ni.sourceCode.framwork.registry.LocalRegister;
 
 //API，提供接口
 public class provider {
@@ -10,6 +11,7 @@ public static void main(String[] args) {
     httpServer.httpStart("localhost", 8080);
 
 //    暴露接口，本地注册
+    LocalRegister.register(HelloService.class.getName(),HelloServiceImpl.class);
 
     }
 }

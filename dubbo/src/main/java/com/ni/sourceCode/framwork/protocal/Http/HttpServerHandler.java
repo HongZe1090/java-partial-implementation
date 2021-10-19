@@ -2,11 +2,13 @@ package com.ni.sourceCode.framwork.protocal.Http;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ni.sourceCode.framwork.protocal.Invocation;
+import com.ni.sourceCode.framwork.registry.LocalRegister;
 import netscape.javascript.JSObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 public class HttpServerHandler {
 
@@ -22,6 +24,13 @@ public class HttpServerHandler {
             Class[] paramType = invocation.getParamType();
             Object[] params = invocation.getParams();
 
+//            反射机制
+            Class impl = LocalRegister.get(interfaceName);
+            try {
+                Method method = impl.getMethod(methodName, paramType);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
