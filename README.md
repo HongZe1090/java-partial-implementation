@@ -44,6 +44,7 @@
 1.注释相当于为类添加了一些属性和属性值，便于操作；同时也有2的考虑
 2.接口或注释都可以为类提供一些标识，在spring对类自动操作时可以通过这些标识执行特定的操作(如InitializingBean，BeanPostProcessor等)
 3.基本都在scan时把特殊需求的类加入list，在creatBean时针对特对的类操作
+4.缓存池，一般使用List<Map>，在程序运行期间存在
 
 ###### 疑问：
 1.entrySet映射怎么用
@@ -62,4 +63,24 @@
 # 三 Dubbo部分实现
 
 
-#### 
+#### dubbo原理
+- 生产者消费者模式
+
+#### 代码流程
+- 服务提供者
+  - 配置内嵌tomcat
+  - tomcat接收request后先走配置的servlet
+  - servlet处理类中配置了handler类处理逻辑
+  - handler类中对servlet类中的参数（接口名，方法名，参数类型，参数名）进行解析
+  - 从解析的接口名中找到接口实现类
+
+#### 部分问题记录
+- Serializable接口，方便数据远程传输，序列化
+  https://baijiahao.baidu.com/s?id=1633305649182361563&wfr=spider&for=pc
+  实际为空接口，仅为jvm编译时提供标识（标识接口）
+  
+- 接口暴露 本地注册接口实现类，方便在传入方法时寻找对应的接口
+#### 未解决的问题
+- 序列化与反序列话具体的过程
+
+# 三 tomcat部分实现
