@@ -2,14 +2,14 @@ package com.ni.sourceCode.framwork.protocal;
 
 import java.io.Serializable;
 
-//序列化，方便储存与网络传输
+//序列化，方便储存与网络传输 自定义的传递参数
 public class Invocation implements Serializable {
     private String interfaceName;
     private String methodName;
     private Class[] paramType;
     private Object[] params;
 
-    public Invocation(String interfaceName, String methodName, Class[] paramType, Object[] params) {
+    public Invocation(String interfaceName, String methodName,Class[] paramType ,Object[] params ) {
         this.interfaceName = interfaceName;
         this.methodName = methodName;
         this.paramType = paramType;
