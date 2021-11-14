@@ -1,5 +1,7 @@
 package com.ni.sourceCode.spring;
 
+import com.ni.sourceCode.spring.factory.config.BeanDefinition;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +18,7 @@ public class ApplicationContext {
 
     //单例池 这里的Object是已经实例化后的Object
     private ConcurrentHashMap<String,Object> singletonObjects = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String,BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
     private List<BeanPostProcessor> BeanPostProcessorList = new ArrayList<>();
 
     public ApplicationContext(Class configClass) throws Exception {

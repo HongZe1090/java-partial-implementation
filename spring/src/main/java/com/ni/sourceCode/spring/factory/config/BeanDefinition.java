@@ -1,8 +1,8 @@
-package com.ni.sourceCode.spring;
+package com.ni.sourceCode.spring.factory.config;
 
 //bean注册
 public class BeanDefinition {
-//    bean的类型
+//    bean的类型 传入类型为class，实例化放在容器中
     private Class clazz;
 //    加载模式
     private String scope;
