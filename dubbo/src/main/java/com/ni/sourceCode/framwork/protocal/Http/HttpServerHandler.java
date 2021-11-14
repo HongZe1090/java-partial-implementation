@@ -3,7 +3,6 @@ package com.ni.sourceCode.framwork.protocal.Http;
 import com.alibaba.fastjson.JSONObject;
 import com.ni.sourceCode.framwork.protocal.Invocation;
 import com.ni.sourceCode.framwork.registry.LocalRegister;
-import netscape.javascript.JSObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

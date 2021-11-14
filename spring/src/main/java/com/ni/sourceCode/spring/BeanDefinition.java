@@ -1,5 +1,6 @@
 package com.ni.sourceCode.spring;
 
+//bean注册
 public class BeanDefinition {
 //    bean的类型
     private Class clazz;

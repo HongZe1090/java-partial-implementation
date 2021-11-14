@@ -1,4 +1,38 @@
-# 一 Spring部分实现
+> 参考 
+> 《手撸spring》
+> b站视频 2021吃透这些Java手写
+
+> 对初步完成的spring容器进行重构
+> 模板设计模式，一期的容器看起来混乱，耦合严重
+
+# 一 Spring相关知识点
+![avator](/assets/spring生命周期.png)
+## 1 springBean容器
+### 是什么
+spring包含并管理应用对象的配置和生命周期，在这个意义上它是一种用于承载对象的容器，可以配置每个Bean对象是如何被创建的。
+如果一个Bean对象交给Spring容器管理，那么这个Bean对象就应该以类似零件的方式被拆解后存放到Bean的定义里，相当于一种把对象解耦的操作。可以让spring更加容易的管理，就行处理循环依赖那样。
+### 设计
+凡是可以存放数据的具体数据结构实现，都可以称之为容器。如LinkedList等，但在spring容器的场景下，我们需要一种可以用于存放和名称索引式的数据结构，HashMap是最合适不过的。
+
+> HashMap是一种基于扰动函数，负载因子，红黑树转换等技术内容，形成的拉链寻址的数据结构，能让数据更加散列的分布在哈希桶以及碰撞时形成的链表和红黑树上
+
+此外一个简单的spring bean容器实现，还需要Bean的定义，注册，获取三个基本步骤。
+- 定义:BeanDefinition
+- 注册:相当于把数据放到hashMap中
+- 获取:通过key获取bean对象
+
+## 2 模板模式
+Bean工厂的接口由抽象类AbstractBeanFactory实现，使用模板模式统一收口通用核心方法的调用逻辑和标准定义，也就很好的控制了后续的实现者不要关心调用逻辑，按照统一方式执行，只要关心具体方法的逻辑实现即可。
+继承AbstractBeanFactory的AbstractAutowireCapableBeanFactory可以实现相应的抽象方法，因为其也是一个抽象类，所以只会实现自己的后续方法。
+
+#####  spring生命周期
+1. 创建
+   class（UserService.class）--> 配置类--> 实例化--> 对象--> 属性填充（依赖注入）--> 初始化（afterPropertiesSet）--> AOP--> 代理对象--> Bean对象
+- 加载和初始化是俩码事，在scan方法时使用classLoad加载获取注释，在scan后或creat时初始化，此时可以使用Initialization接口做一些设置（类比vue的声明周期）
+- AOP
+2. 销毁
+
+# 二 Spring部分实现
 
 #### 实现内容包括
 - spring启动及扫描流程 
@@ -52,14 +86,6 @@
 3.反射创建实例与bean初始化之间的关系
 4.向上转型，向下转型，动态代理的方法
 
-# 二 Spring相关知识点集中
-##### 1 spring生命周期
-1. 创建
-  class（UserService.class）--> 配置类--> 实例化--> 对象--> 属性填充（依赖注入）--> 初始化（afterPropertiesSet）--> AOP--> 代理对象--> Bean对象
-  - 加载和初始化是俩码事，在scan方法时使用classLoad加载获取注释，在scan后或creat时初始化，此时可以使用Initialization接口做一些设置（类比vue的声明周期）
-  - AOP
-2. 销毁
-
 # 三 Dubbo部分实现
 
 
@@ -83,4 +109,4 @@
 #### 未解决的问题
 - 序列化与反序列话具体的过程
 
-# 三 tomcat部分实现
+# 四 tomcat部分实现

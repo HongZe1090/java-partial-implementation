@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//spring的容器类
+//spring的容器类 BeanFactory
 public class ApplicationContext {
 //    配置类
     private Class configClass;
