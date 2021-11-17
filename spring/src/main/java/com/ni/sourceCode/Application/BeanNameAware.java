@@ -1,4 +1,4 @@
-package com.ni.sourceCode.spring;
+package com.ni.sourceCode.Application;
 
 public interface BeanNameAware {
 

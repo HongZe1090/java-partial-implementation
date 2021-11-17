@@ -1,4 +1,4 @@
-package com.ni.sourceCode.spring;
+package com.ni.sourceCode.Application;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

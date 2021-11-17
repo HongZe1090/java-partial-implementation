@@ -1,9 +1,9 @@
 package com.ni.sourceCode.example.service;
 
-import com.ni.sourceCode.spring.Autowired;
-import com.ni.sourceCode.spring.BeanNameAware;
-import com.ni.sourceCode.spring.Component;
-import com.ni.sourceCode.spring.Scope;
+import com.ni.sourceCode.Application.Autowired;
+import com.ni.sourceCode.Application.BeanNameAware;
+import com.ni.sourceCode.Application.Component;
+import com.ni.sourceCode.Application.Scope;
 
 //Scope表明这是一个原型bean
 //单例bean每次获取是不同的

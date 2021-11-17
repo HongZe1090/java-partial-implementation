@@ -1,5 +1,5 @@
 > 参考 
-> 《手撸spring》
+> 《手撸spring》 ———— bugstack 虫洞栈
 > 
 > b站视频 2021吃透这些Java手写
 > 
@@ -55,7 +55,7 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 2. 销毁
 
 # 二 Spring部分实现
-## 一期实现
+## 一期实现 在Application包下
 #### 实现内容包括
 - spring启动及扫描流程 
 - getBean（）流程
@@ -97,13 +97,19 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 3.基本都在scan时把特殊需求的类加入list，在creatBean时针对特对的类操作
 4.缓存池，一般使用List<Map>，在程序运行期间存在
 
-## 二期重构
-### 重构点1
+## 二期重构 在spring包下
+### 重构点1 模板设计模式
 ![avator](/assets/模板模式.png)
 - Bean工厂的接口由抽象类AbstractBeanFactory实现，使用模板模式统一收口通用核心方法的调用逻辑和标准定义，也就很好的控制了后续的实现者不要关心调用逻辑，按照统一方式执行，只要关心具体方法的逻辑实现即可。
 - 几乎所有的程序都离不开接口，抽象类，实现，继承，而这些不同特性的类的使用就可以非常好的隔离开类的功能职责和范围。
 - **如在spring中，AbstractBeanFactory为模板类，规定了getBean，createBean，getBeanDefinition三个方法，还可以使用继承的单例注册bean方法。getBean在此实现单例的情况，其他情况下的操作在其子类中实现(AbstractAutowireCapable,DefaultListableFactory)**
 - DefaultListableFactory通过继承获得了获取bean(上溯到AbstractBeanFactory的getBean)的能力，通过实现接口获得了注册bean的能力
+
+### 重构点2 
+![avator](/assets/实例化结构.png)
+- 实例方法1： CGLIB代理主要通过对字节码的操作，为对象引入间接级别，以控制对象的访问。我们知道Java中有一个动态代理也是做这个事情的，那我们为什么不直接使用Java动态代理，而要使用CGLIB呢？答案是CGLIB相比于JDK动态代理更加强大，JDK动态代理虽然简单易用，但是其有一个致命缺陷是，只能对接口进行代理。如果要代理的类为一个普通类、没有接口，那么Java动态代理就没法使用了。关于Java动态代理，可以参者这里Java动态代理分析
+- 实例方法2： Java自带的方法，反射
+- 实例化都是在getBean的时候进行，实例化时传入name和参数，在AACB类中获取beanDefination再实例化
 
 # 三 Dubbo部分实现
 

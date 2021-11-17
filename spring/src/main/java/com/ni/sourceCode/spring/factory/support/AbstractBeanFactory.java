@@ -1,5 +1,6 @@
 package com.ni.sourceCode.spring.factory.support;
 
+import com.ni.sourceCode.spring.BeansException;
 import com.ni.sourceCode.spring.factory.BeanFactory;
 import com.ni.sourceCode.spring.factory.config.BeanDefinition;
 
@@ -10,17 +11,27 @@ import com.ni.sourceCode.spring.factory.config.BeanDefinition;
  */
 public abstract class AbstractBeanFactory extends DefaultBeanRegistry implements BeanFactory {
     @Override
-    public Object getBean(String name) throws InstantiationException, IllegalAccessException {
-//        如果可以从继承的单例池中获取
-        Object bean = getSingleton(name);
-        if(bean!=null)
-            return bean;
-//        如果不能
-        BeanDefinition beanDefinition = getBeanDefinition(name);
-        return creatBean(name,beanDefinition);
+    public Object getBean(String name) throws BeansException {
+        return doGetBean(name, null);
     }
 
-    protected abstract BeanDefinition getBeanDefinition(String beanName);
+    @Override
+    public Object getBean(String name, Object... args) throws BeansException {
+        return doGetBean(name, args);
+    }
 
-    protected abstract Object creatBean(String beanName,BeanDefinition beanDefinition) throws InstantiationException, IllegalAccessException;
+    protected <T> T doGetBean(final String name, final Object[] args) {
+        Object bean = getSingleton(name);
+        if (bean != null) {
+            return (T) bean;
+        }
+
+//        单例池中没有，就createBean
+        BeanDefinition beanDefinition = getBeanDefinition(name);
+        return (T) createBean(name, beanDefinition, args);
+    }
+
+    protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
+
+    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException;
 }
