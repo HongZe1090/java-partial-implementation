@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @创建人 HongZe
  * @创建时间 2021/11/17
- * @描述 构造函数有无进心实例化
+ * @描述 构造函数有无参数实例化
  */
 public class SimpleInstantiationStrategy implements InstantiantionStrategy {
     @Override

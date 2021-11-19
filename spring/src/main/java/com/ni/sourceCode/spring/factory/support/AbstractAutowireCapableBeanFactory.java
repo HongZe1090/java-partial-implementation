@@ -1,7 +1,11 @@
 package com.ni.sourceCode.spring.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.ni.sourceCode.spring.BeansException;
+import com.ni.sourceCode.spring.PropertyValue;
+import com.ni.sourceCode.spring.PropertyValues;
 import com.ni.sourceCode.spring.factory.config.BeanDefinition;
+import com.ni.sourceCode.spring.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
 
@@ -28,6 +32,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         Object bean = null;
         try {
             bean = createBeanInstance(beanDefinition, beanName, args);
+            // 给 Bean 填充属性
+            applyPropertyValues(beanName, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
@@ -57,6 +63,29 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     public void setInstantiationStrategy(InstantiantionStrategy instantiationStrategy) {
         this.instantiationStrategy = instantiationStrategy;
+    }
+
+    /**
+
+     *@描述 Bean属性填充
+
+     */
+    protected void applyPropertyValues(String beanName,Object bean,BeanDefinition beanDefinition) {
+
+        PropertyValues propertyValues = beanDefinition.getPropertyValues();
+        for(PropertyValue propertyValue : propertyValues.getPropertyValue()){
+            String name = propertyValue.getName();
+            Object value = propertyValue.getValue();
+
+            // A 依赖 B，获取 B 的实例化
+            if (value instanceof BeanReference) {
+                BeanReference beanReference = (BeanReference) value;
+                value = getBean(beanReference.getBeanName());
+            }
+            // 属性填充 给已经是实例好的bean注入属性，使用hutool
+            BeanUtil.setFieldValue(bean, name, value);
+
+        }
     }
 
 }
