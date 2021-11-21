@@ -27,6 +27,11 @@ public class BeanDefinition {
         this.scope = scope;
     }
 
+    public BeanDefinition(Class beanClass) {
+        this.clazz = clazz;
+        this.propertyValues = this.propertyValues = new PropertyValues();
+    }
+
     public Class getClazz() {
         return clazz;
     }

@@ -9,4 +9,5 @@ import com.ni.sourceCode.spring.factory.config.BeanDefinition;
  */
 public interface BeanDefinitionRegistry {
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
+
 }
