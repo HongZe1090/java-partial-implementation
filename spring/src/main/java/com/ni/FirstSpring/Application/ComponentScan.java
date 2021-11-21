@@ -1,4 +1,4 @@
-package com.ni.sourceCode.Application;
+package com.ni.FirstSpring.Application;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
 //        这3个生命周期分别对应于：Java源文件(.java文件) ---> .class文件 ---> 内存中的字节码。
 //          ComponentScan注解规定了要扫描的包
 @Retention(RetentionPolicy.RUNTIME)
-//写在属性和方法上面
-@Target({ElementType.METHOD,ElementType.FIELD})
-public @interface Autowired {
-
+@Target(ElementType.TYPE)
+public @interface ComponentScan {
+    String value() default "";
 }

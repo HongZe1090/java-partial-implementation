@@ -1,9 +1,9 @@
-package com.ni.sourceCode.example.service;
+package com.ni.FirstSpring.example.service;
 
-import com.ni.sourceCode.Application.Autowired;
-import com.ni.sourceCode.Application.BeanNameAware;
-import com.ni.sourceCode.Application.Component;
-import com.ni.sourceCode.Application.Scope;
+import com.ni.FirstSpring.Application.Autowired;
+import com.ni.FirstSpring.Application.BeanNameAware;
+import com.ni.FirstSpring.Application.Component;
+import com.ni.FirstSpring.Application.Scope;
 
 //Scope表明这是一个原型bean
 //单例bean每次获取是不同的

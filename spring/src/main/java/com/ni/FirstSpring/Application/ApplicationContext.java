@@ -1,4 +1,4 @@
-package com.ni.sourceCode.Application;
+package com.ni.FirstSpring.Application;
 
 import com.ni.sourceCode.spring.factory.config.BeanDefinition;
 
@@ -93,7 +93,7 @@ public class ApplicationContext {
         ClassLoader classLoader = ApplicationContext.class.getClassLoader();
 
         //获取目录 获取文件
-        URL resource = classLoader.getResource("com/ni/sourceCode/example/service");
+        URL resource = classLoader.getResource("com/ni/FirstSpring/example/service");
         File file = new File(resource.getFile());
         if(file.isDirectory()) {
             File[] files = file.listFiles();

@@ -121,11 +121,7 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 ![avator](/assets/xml结构图.png)
 添加xml文件属性注入，在createBean的时候，位于Spring框架核心包下的IO实现内容
 **接口管定义，抽象类处理非接口功能外的注册 Bean 组件填充，最终实现类即可只关心具体的业务实现**
-本章节为了能把 Bean 的定义、注册和初始化交给 Spring.xml 配置化处理，那么
-就需要实现两大块内容，分别是：资源加载器、xml 资源处理类，实现过程主要以
-对接口 Resource、ResourceLoader 的实现，而另外
-BeanDefinitionReader 接口则是对资源的具体使用，将配置信息注册到
-Spring 容器中去。
+本章节为了能把 Bean 的定义、注册和初始化交给 Spring.xml 配置化处理，那么就需要实现两大块内容，分别是：资源加载器、xml 资源处理类，实现过程主要以对接口 Resource、ResourceLoader 的实现，而另外BeanDefinitionReader 接口则是对资源的具体使用，将配置信息注册到Spring 容器中去。
 > 具体见原书58页
 
 # 三 Dubbo部分实现

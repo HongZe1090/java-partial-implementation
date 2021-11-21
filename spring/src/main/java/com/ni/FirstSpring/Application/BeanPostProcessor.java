@@ -1,4 +1,4 @@
-package com.ni.sourceCode.Application;
+package com.ni.FirstSpring.Application;
 
 public interface BeanPostProcessor {
 

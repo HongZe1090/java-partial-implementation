@@ -1,7 +1,7 @@
-package com.ni.sourceCode.example.service;
+package com.ni.FirstSpring.example.service;
 
-import com.ni.sourceCode.Application.BeanPostProcessor;
-import com.ni.sourceCode.Application.Component;
+import com.ni.FirstSpring.Application.BeanPostProcessor;
+import com.ni.FirstSpring.Application.Component;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

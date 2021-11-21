@@ -1,6 +1,6 @@
-import com.ni.sourceCode.example.AppConfig;
-import com.ni.sourceCode.example.service.UserInterface;
-import com.ni.sourceCode.Application.ApplicationContext;
+import com.ni.FirstSpring.example.AppConfig;
+import com.ni.FirstSpring.example.service.UserInterface;
+import com.ni.FirstSpring.Application.ApplicationContext;
 
 public class Test {
     public static void main(String[] args) throws Exception {
