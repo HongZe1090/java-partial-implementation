@@ -85,7 +85,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             }
 
             // 定义Bean
-            BeanDefinition beanDefinition = new BeanDefinition(clazz,);
+            BeanDefinition beanDefinition = new BeanDefinition(clazz);
             // 读取属性并填充
             for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
                 if (!(bean.getChildNodes().item(j) instanceof Element)) continue;
@@ -101,7 +101,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
                 PropertyValue propertyValue = new PropertyValue(attrName, value);
                 beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
             }
-            if (getRegistry().contains(beanName)) {
+            if (getRegistry().containsBeanDefinition(beanName)) {
                 throw new BeansException("Duplicate beanName[" + beanName + "] is not allowed");
             }
             // 注册 BeanDefinition
