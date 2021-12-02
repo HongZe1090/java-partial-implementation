@@ -5,8 +5,11 @@
 > 
 > 菜鸟教程
 
-> 对初步完成的spring容器进行重构
+> 对初步完成的spring容器进行重构，定义接口，接口继承接口，接口由抽象类实现，类继承的接实现接口方法。为了让核心逻辑层和业务封装层做好隔离，当业务变化时只需要在业务层完成装配而底层的核心逻辑服务不需要频繁变化
+> 
 > 模板设计模式，一期的容器看起来混乱，耦合严重，重新设计逐步添加功能
+> 
+> 在io处理时的组合思想 装饰器设计模式加载xml
 
 # 一 Spring相关知识点
 ![avator](/assets/spring生命周期.png)
@@ -52,6 +55,8 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 > 很显然接口并不能让你先做好一部分事情，然后其中一些事情（判断？持久化？从一个外部数据结构转换为模板所需的数据结构？诸如此类）留空给别人去做。
 > 接口只是告诉别人我可以做什么事，但是我不知道怎么做，怎么做到则是由接口的实现类定义。
 > 抽象类是我搞定大部分了，你来告诉我一些细节要怎么做就ok了。
+
+## 3 包装(装饰)模式(见二的详解)
 
 #####  spring生命周期
 1. 创建
@@ -104,7 +109,7 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 4.缓存池，一般使用List<Map>，在程序运行期间存在
 
 ## 二期重构 在spring包下
-### 重构点1 模板设计模式
+### 重构点1 模板设计模式实现bean工厂
 ![avator](/assets/模板模式.png)
 - Bean工厂的接口由抽象类AbstractBeanFactory实现，使用模板模式统一收口通用核心方法的调用逻辑和标准定义，也就很好的控制了后续的实现者不要关心调用逻辑，按照统一方式执行，只要关心具体方法的逻辑实现即可。
 - 几乎所有的程序都离不开接口，抽象类，实现，继承，而这些不同特性的类的使用就可以非常好的隔离开类的功能职责和范围。
@@ -117,16 +122,49 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 - 实例方法2： Java自带的方法，反射
 - 实例化都是在getBean的时候进行，实例化时传入name和参数，在AACB类中获取beanDefination再实例化
 
-### 重构点3
+### 重构点3 
 ![avator](/assets/xml结构图.png)
-添加xml文件属性注入，在createBean的时候，位于Spring框架核心包下的IO实现内容
-**接口管定义，抽象类处理非接口功能外的注册 Bean 组件填充，最终实现类即可只关心具体的业务实现**
-本章节为了能把 Bean 的定义、注册和初始化交给 Spring.xml 配置化处理，那么
-就需要实现两大块内容，分别是：资源加载器、xml 资源处理类，实现过程主要以
-对接口 Resource、ResourceLoader 的实现，而另外
-BeanDefinitionReader 接口则是对资源的具体使用，将配置信息注册到
-Spring 容器中去。
+- 添加xml文件属性注入，在createBean的时候，位于Spring框架核心包下的IO实现内容
+- **接口管定义，抽象类处理非接口功能外的注册 Bean 组件填充，最终实现类即可只关心具体的业务实现**
+- 本章节为了能把 Bean 的定义、注册和初始化交给 Spring.xml 配置化处理，那么就需要实现两大块内容，分别是：资源加载器、xml 资源处理类，实现过程主要以对接口 Resource、ResourceLoader 的实现，而另外BeanDefinitionReader 接口则是对资源的具体使用，将配置信息注册到Spring 容器中去。
+- 包装模式设计加载xml，增强接口，先添加注册到beanDefinition中的操作，再实现加载
 > 具体见原书58页
+> https://blog.csdn.net/m0_38075425/article/details/81627349 为什么classpth下要用类加载器加载资源与类加载机制
+> 抽象类可以只实现接口的某些方法(如工具方法)，把主要方法(业务方法)留到以后实现(或者使用装饰器设计模式)
+
+### 重构点4 应用上下文 上下文，上下文代表了程序当下所运行的环境，联系你整个app的生命周期与资源调用，是程序可以访问到的所有资源的总和，资源可以是一个变量，也可以是一个对象的引用。(差不多是用户可以访问的资源，再如Netty的ctx上下文)
+- spring的应用上下文继承了BeanFactory，对外暴露，除了BeanFactory中bean生命周期的相关接口外还实现了其他操作，如资源刷新等。
+- 原书P73页
+- BeanFactoryPostProocessor 在Bean对象注册后(即BeanDifinition注册后)但未实例化之前，对即BeanDifinition进行修改  **其实现在context的support包下，在xml解析时即实现**
+- BeanPostProocessor 在对象实例化之后修改Bean对象或者替换Bean对象 **其实现在AutowireCapableBeanFactory包下，进行createBean的前置和后置操作**
+
+**实现接口的具体方式还没有看懂**  
+
+> Spring装配Bean的过程 在AbstractAutowireCapableBeanFactory中有所体现
+> 此类是 AbstractBeanFactory 的子类，AbstractBeanFactory是模板抽象类，其预留的creatBean模板方法(createBean时的实例化，属性注入，前置后置处理)主要在此类中实现，此类是一个装饰器类
+> 注意bean的前置和后置操作均在属性注入之后
+> **收获:如果不使用模板设计方式，各个复杂的功能模板杂在一起根本看不懂**
+> **收获:关于对外暴露接口，将xml的读取和加载融合到spring启动生命周期中，不需要用户手动获取bean工厂后注入，不对外暴露xml处理类的接口，提高了用户体验和安全性**
+> 1. 实例化;
+>
+> 2. 设置属性值;
+>
+> 3. 如果实现了BeanNameAware接口,调用setBeanName设置Bean的ID或者Name;
+>
+> 4. 如果实现BeanFactoryAware接口,调用setBeanFactory 设置BeanFactory;
+>
+> 5. 如果实现ApplicationContextAware,调用setApplicationContext设置ApplicationContext
+>
+> 6. 调用BeanPostProcessor的预先初始化方法;
+>
+> 7. 调用InitializingBean的afterPropertiesSet()方法;
+>
+> 8. 调用定制init-method方法；
+>
+> 9. 调用BeanPostProcessor的后初始化方法;
+>   ————————————————
+>   版权声明：本文为CSDN博主「Cyandev」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+>   原文链接：https://blog.csdn.net/weixin_29572661/article/details/114244993
 
 # 三 Dubbo部分实现
 
