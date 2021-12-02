@@ -133,6 +133,7 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 > 抽象类可以只实现接口的某些方法(如工具方法)，把主要方法(业务方法)留到以后实现(或者使用装饰器设计模式)
 
 ### 重构点4 应用上下文 上下文，上下文代表了程序当下所运行的环境，联系你整个app的生命周期与资源调用，是程序可以访问到的所有资源的总和，资源可以是一个变量，也可以是一个对象的引用。(差不多是用户可以访问的资源，再如Netty的ctx上下文)
+- spring的应用上下文继承了BeanFactory，对外暴露，除了BeanFactory中bean生命周期的相关接口外还实现了其他操作，如资源刷新等。
 - 原书P73页
 - BeanFactoryPostProocessor 在Bean对象注册后(即BeanDifinition注册后)但未实例化之前，对即BeanDifinition进行修改  **其实现在context的support包下，在xml解析时即实现**
 - BeanPostProocessor 在对象实例化之后修改Bean对象或者替换Bean对象 **其实现在AutowireCapableBeanFactory包下，进行createBean的前置和后置操作**
