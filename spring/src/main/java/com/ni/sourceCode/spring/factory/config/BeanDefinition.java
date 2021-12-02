@@ -4,48 +4,26 @@ import com.ni.sourceCode.spring.PropertyValues;
 
 //bean注册 bean的相关属性储存
 public class BeanDefinition {
-//    bean的类型 传入类型为class，实例化放在容器中
-    private Class clazz;
-//    加载模式
-    private String scope;
+    private Class beanClass;
 
     private PropertyValues propertyValues;
 
-    public BeanDefinition() {
-    }
-
-    public BeanDefinition(Class clazz, String scope) {
-        this.clazz = clazz;
-        this.propertyValues = new PropertyValues();
-        this.scope = scope;
-    }
-
-//    直接使用二元式定义，避免后面for循环的时候还要判断属性填充是否为空
-    public BeanDefinition(Class beanClass, String scope,PropertyValues propertyValues) {
-        this.clazz = clazz;
-        this.propertyValues = propertyValues !=null?propertyValues:new PropertyValues();
-        this.scope = scope;
-    }
-
     public BeanDefinition(Class beanClass) {
-        this.clazz = clazz;
-        this.propertyValues = this.propertyValues = new PropertyValues();
+        this.beanClass = beanClass;
+        this.propertyValues = new PropertyValues();
     }
 
-    public Class getClazz() {
-        return clazz;
+    public BeanDefinition(Class beanClass, PropertyValues propertyValues) {
+        this.beanClass = beanClass;
+        this.propertyValues = propertyValues != null ? propertyValues : new PropertyValues();
     }
 
-    public void setClazz(Class clazz) {
-        this.clazz = clazz;
+    public Class getBeanClass() {
+        return beanClass;
     }
 
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
+    public void setBeanClass(Class beanClass) {
+        this.beanClass = beanClass;
     }
 
     public PropertyValues getPropertyValues() {

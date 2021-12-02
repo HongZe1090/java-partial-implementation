@@ -12,11 +12,11 @@ import java.lang.reflect.Constructor;
  * @创建时间 2021/11/17
  * @描述 Cglib 实例化
  */
-public class CglibSubclassingInstantiationStrategy implements InstantiantionStrategy{
+public class CglibSubclassingInstantiationStrategy implements InstantiationStrategy{
     @Override
     public Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor constructor, Object[] args) throws BeansException {
         Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(beanDefinition.getClazz());
+        enhancer.setSuperclass(beanDefinition.getBeanClass());
         enhancer.setCallback(new NoOp() {
             @Override
             public int hashCode() {

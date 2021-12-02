@@ -20,7 +20,7 @@ public class PropertyValues {
      *@描述 获得所有的属性值
 
      */
-    public PropertyValue[] getPropertyValue(){
+    public PropertyValue[] getPropertyValues(){
         return this.propertyValueList.toArray(new PropertyValue[0]);
     }
 

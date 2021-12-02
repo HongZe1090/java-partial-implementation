@@ -1,6 +1,7 @@
 package com.ni.sourceCode.spring.factory.support;
 
 import com.ni.sourceCode.core.io.DefaultResourceLoader;
+import com.ni.sourceCode.core.io.Resource;
 import com.ni.sourceCode.core.io.ResourceLoader;
 
 /**
@@ -22,11 +23,11 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
         this.resourceLoader = resourceLoader;
     }
 
-    public BeanDefinitionRegistry getRegistry() {
+    protected BeanDefinitionRegistry getRegistry() {
         return registry;
     }
 
-    public ResourceLoader getResourceLoader() {
+    protected ResourceLoader getResourceLoader() {
         return resourceLoader;
     }
 

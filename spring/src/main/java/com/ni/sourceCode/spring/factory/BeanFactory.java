@@ -12,4 +12,7 @@ public interface BeanFactory {
     public Object getBean(String name) throws InstantiationException, IllegalAccessException;
 
     public Object getBean(String name,Object... agrs) throws BeansException;
+
+    <T> T getBean(String name, Class<T> requiredType) throws BeansException;
+
 }

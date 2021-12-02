@@ -10,7 +10,7 @@ import java.lang.reflect.Constructor;  //拿到符合入参信息对应的构造
  * @创建时间 2021/11/17
  * @描述 添加必要的入参信息（好像在Fisco里面用过），实例化策略
  */
-public interface InstantiantionStrategy {
+public interface InstantiationStrategy {
 
     Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor constructor, Object[] args) throws BeansException;
 
