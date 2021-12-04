@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @创建人 HongZe
  * @创建时间 2021/12/2
- * @描述
+ * @描述 这是一个模板类，实现了refresh()的过程，另外把定义出来的抽象方法，refreshBeanFactory,getBeanFactory由后面的继承此抽象类的其他抽象类实现
  */
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
     @Override

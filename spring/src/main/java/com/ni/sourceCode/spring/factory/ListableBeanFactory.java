@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * @创建人 HongZe
  * @创建时间 2021/12/2
- * @描述
+ * @描述 继承了BeanFactory的相关方法
  */
 public interface ListableBeanFactory extends BeanFactory{
     /**

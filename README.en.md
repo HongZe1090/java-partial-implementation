@@ -5,11 +5,13 @@
 > 
 > 菜鸟教程
 
-> 对初步完成的spring容器进行重构，定义接口，接口继承接口，接口由抽象类实现，类继承的接实现接口方法。为了让核心逻辑层和业务封装层做好隔离，当业务变化时只需要在业务层完成装配而底层的核心逻辑服务不需要频繁变化
+> 对初步完成的spring容器进行重构，定义接口，接口继承接口，接口由抽象类实现，类继承的接实现接口方法。为了让核心逻辑层和业务封装层做好隔离，当业务变化时只需要在业务层完成装配而底层的核心逻辑服务不需要频繁变化；解耦，方便实现复杂的功能(如context服务包和beanfactory核心包，如何对接，就是继承了beanfactory核心包的增强接口，新增beanfactorypostprocess功能时不需要改动核心包)
 > 
-> 模板设计模式，一期的容器看起来混乱，耦合严重，重新设计逐步添加功能
+> 模板设计模式，一期的容器看起来混乱，耦合严重，重新设计逐步添加功能,设计模式的包装让对外的服务调用更加简单
 > 
 > 在io处理时的组合思想 装饰器设计模式加载xml
+> 
+> 重构点4 beanfactorypostprocess和beanpostprocess实现细节尚未理解，需要重新学习
 
 # 一 Spring相关知识点
 ![avator](/assets/spring生命周期.png)
@@ -114,7 +116,7 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 - Bean工厂的接口由抽象类AbstractBeanFactory实现，使用模板模式统一收口通用核心方法的调用逻辑和标准定义，也就很好的控制了后续的实现者不要关心调用逻辑，按照统一方式执行，只要关心具体方法的逻辑实现即可。
 - 几乎所有的程序都离不开接口，抽象类，实现，继承，而这些不同特性的类的使用就可以非常好的隔离开类的功能职责和范围。
 - **如在spring中，AbstractBeanFactory为模板类，规定了getBean，createBean，getBeanDefinition三个方法，还可以使用继承的单例注册bean方法。getBean在此实现单例的情况，其他情况下的操作在其子类中实现(AbstractAutowireCapable,DefaultListableFactory)**
-- DefaultListableFactory通过继承获得了获取bean(上溯到AbstractBeanFactory的getBean)的能力，通过实现接口获得了注册bean的能力
+- DefaultListableFactory(核心实现类)通过继承获得了获取bean(上溯到AbstractBeanFactory的getBean)的能力，通过实现接口获得了注册bean的能力
 
 ### 重构点2 
 ![avator](/assets/实例化结构.png)
@@ -128,15 +130,17 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 - **接口管定义，抽象类处理非接口功能外的注册 Bean 组件填充，最终实现类即可只关心具体的业务实现**
 - 本章节为了能把 Bean 的定义、注册和初始化交给 Spring.xml 配置化处理，那么就需要实现两大块内容，分别是：资源加载器、xml 资源处理类，实现过程主要以对接口 Resource、ResourceLoader 的实现，而另外BeanDefinitionReader 接口则是对资源的具体使用，将配置信息注册到Spring 容器中去。
 - 包装模式设计加载xml，增强接口，先添加注册到beanDefinition中的操作，再实现加载
+- 读取资源时的设计(core.io包)为策略模式
 > 具体见原书58页
 > https://blog.csdn.net/m0_38075425/article/details/81627349 为什么classpth下要用类加载器加载资源与类加载机制
 > 抽象类可以只实现接口的某些方法(如工具方法)，把主要方法(业务方法)留到以后实现(或者使用装饰器设计模式)
 
-### 重构点4 应用上下文 上下文，上下文代表了程序当下所运行的环境，联系你整个app的生命周期与资源调用，是程序可以访问到的所有资源的总和，资源可以是一个变量，也可以是一个对象的引用。(差不多是用户可以访问的资源，再如Netty的ctx上下文)
-- spring的应用上下文继承了BeanFactory，对外暴露，除了BeanFactory中bean生命周期的相关接口外还实现了其他操作，如资源刷新等。
+### 重构点4 应用上下文 上下文，上下文代表了程序当下所运行的环境，联系你整个app的生命周期与资源调用，是程序可以访问到的所有资源的总和，资源可以是一个变量，也可以是一个对象的引用。(差不多封装了用户可以访问的资源，面向用户，再如Netty的ctx上下文)
 - 原书P73页
 - BeanFactoryPostProocessor 在Bean对象注册后(即BeanDifinition注册后)但未实例化之前，对即BeanDifinition进行修改  **其实现在context的support包下，在xml解析时即实现**
 - BeanPostProocessor 在对象实例化之后修改Bean对象或者替换Bean对象 **其实现在AutowireCapableBeanFactory包下，进行createBean的前置和后置操作**
+
+- context服务包下，先关注ApplicationContext接口，有哪些主要功能；AbstractApplication核心类实现主要功能，实现主要方法，方法依赖的方法或工具类或不同情况下的实现或前置后置操作在继承类中处理；AbstractApplicationContext继承ListableBeanFactory继承BeanFactory，获得beanFactory相关方法，但是和BeanFactory区本身的各种方法隔离，只关注功能，解耦在易于理解的同时也方便下一步的拓展和实现
 
 **实现接口的具体方式还没有看懂**  
 
@@ -145,6 +149,7 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 > 注意bean的前置和后置操作均在属性注入之后
 > **收获:如果不使用模板设计方式，各个复杂的功能模板杂在一起根本看不懂**
 > **收获:关于对外暴露接口，将xml的读取和加载融合到spring启动生命周期中，不需要用户手动获取bean工厂后注入，不对外暴露xml处理类的接口，提高了用户体验和安全性**
+>
 > 1. 实例化;
 >
 > 2. 设置属性值;
@@ -197,3 +202,5 @@ spring包含并管理应用对象的配置和生命周期，在这个意义上�
 > 4.向上转型，向下转型，动态代理的方法
 > 5.抽象类和接口的区别 抽象类是把大部分的事情做好并暴露出来，只有细节等着下面的继承类实现
 > 6.toArray()，JAVA函数，当使用ArrayList时，有时想获得一个实际的数组，这个数组包含了列表的内容。可以通过调用方法toArray()来实现。
+> 7.看源码的方法(spring设计的妙处):从模板方法开始，先忽略细节把握脉络；看核心实现类和主要接口，看其实现了哪些功能；具体到细节，时间顺序，正序或倒叙，看一部分时忽略另一部分的实现，只关注功能，相互隔离
+> 如context服务包下，先关注ApplicationContext接口，有哪些主要功能；AbstractApplication核心类实现主要功能，实现主要方法，方法依赖的方法或工具类或不同情况下的实现或前置后置操作在继承类中处理；AbstractApplicationContext继承ListableBeanFactory继承BeanFactory，获得beanFactory相关方法，但是和BeanFactory区本身的各种方法隔离，只关注功能，解耦在易于理解的同时也方便下一步的拓展和实现
